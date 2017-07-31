@@ -65,6 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3D427F931F2FCFFC004BE95A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3D912BB71F2F6422009757D8 /* WCLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WCLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D912BBA1F2F6422009757D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D912BBC1F2F6422009757D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +106,7 @@
 		3D912BAE1F2F6422009757D8 = {
 			isa = PBXGroup;
 			children = (
+				3D427F931F2FCFFC004BE95A /* README.md */,
 				3D912BB91F2F6422009757D8 /* WCLive */,
 				3D912BCD1F2F6422009757D8 /* WCLive WatchKit App */,
 				3D912BDC1F2F6422009757D8 /* WCLive WatchKit Extension */,
@@ -563,6 +565,7 @@
 				3D912BEA1F2F6422009757D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D912BEC1F2F6422009757D8 /* Build configuration list for PBXNativeTarget "WCLive WatchKit App" */ = {
 			isa = XCConfigurationList;
@@ -571,6 +574,7 @@
 				3D912BEE1F2F6422009757D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3D912BF01F2F6422009757D8 /* Build configuration list for PBXNativeTarget "WCLive" */ = {
 			isa = XCConfigurationList;
@@ -579,6 +583,7 @@
 				3D912BF21F2F6422009757D8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
