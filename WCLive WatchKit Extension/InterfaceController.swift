@@ -48,14 +48,24 @@ enum Directions {
     
 }
 
-class InterfaceController: WKInterfaceController {
+class InterfaceController: WKInterfaceController,WKCrownDelegate {
 
     let delegate:ExtensionDelegate = WKExtension.shared().delegate! as! ExtensionDelegate
-    
+
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
+        crownSequencer.delegate = self
+        crownSequencer.focus()
         
         // Configure interface objects here.
+    }
+    
+    func crownDidRotate(_ crownSequencer: WKCrownSequencer?, rotationalDelta: Double) {
+        print(rotationalDelta)
+    }
+    
+    func crownDidBecomeIdle(_ crownSequencer: WKCrownSequencer?) {
+        print("idle",crownSequencer?.rotationsPerSecond)
     }
     
     override func willActivate() {

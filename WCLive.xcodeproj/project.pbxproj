@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D8598381F30D8B500A9BE3F /* scene.scn in Resources */ = {isa = PBXBuildFile; fileRef = 3D8598371F30D8B500A9BE3F /* scene.scn */; };
 		3D912BBB1F2F6422009757D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D912BBA1F2F6422009757D8 /* AppDelegate.swift */; };
 		3D912BBD1F2F6422009757D8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D912BBC1F2F6422009757D8 /* ViewController.swift */; };
 		3D912BC01F2F6422009757D8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D912BBE1F2F6422009757D8 /* Main.storyboard */; };
@@ -66,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		3D427F931F2FCFFC004BE95A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		3D8598371F30D8B500A9BE3F /* scene.scn */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = scene.scn; sourceTree = "<group>"; };
 		3D912BB71F2F6422009757D8 /* WCLive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WCLive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D912BBA1F2F6422009757D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D912BBC1F2F6422009757D8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				3D912BC11F2F6422009757D8 /* Assets.xcassets */,
 				3D912BC31F2F6422009757D8 /* LaunchScreen.storyboard */,
 				3D912BC61F2F6422009757D8 /* Info.plist */,
+				3D8598371F30D8B500A9BE3F /* scene.scn */,
 			);
 			path = WCLive;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D912BC51F2F6422009757D8 /* LaunchScreen.storyboard in Resources */,
+				3D8598381F30D8B500A9BE3F /* scene.scn in Resources */,
 				3D912BC21F2F6422009757D8 /* Assets.xcassets in Resources */,
 				3D912BC01F2F6422009757D8 /* Main.storyboard in Resources */,
 			);
