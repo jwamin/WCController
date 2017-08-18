@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,GameAndWatchDelegate {
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var status: StatusLight!
@@ -28,6 +28,10 @@ class ViewController: UIViewController {
         label.text = str
     }
 
+    func sendMessage(str: String) {
+        updateLabel(str: str)
+    }
+    
 }
 
 @IBDesignable class StatusLight : UIView {

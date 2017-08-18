@@ -10,43 +10,6 @@ import WatchKit
 import Foundation
 import WatchConnectivity
 
-enum Directions {
-    
-    case down
-    case right
-    case up
-    case left
-    case center
-    case upright
-    case upleft
-    case downright
-    case downleft
-    
-    func stringDescriptor()->String{
-        switch self {
-        case .up:
-            return "⬆️"
-        case .down:
-            return "⬇️"
-        case .left:
-            return "⬅️"
-        case .right:
-            return "➡️"
-        case .center:
-            return "⏺"
-        case .downleft:
-            return "↙️"
-        case .downright:
-            return "↘️"
-        case .upright:
-            return "↗️"
-        case .upleft:
-            return "↖️"
-        }
-        
-    }
-    
-}
 
 class InterfaceController: WKInterfaceController,WKCrownDelegate {
 

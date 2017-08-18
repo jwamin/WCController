@@ -9,17 +9,27 @@
 import UIKit
 import WatchConnectivity
 
+protocol GameAndWatchDelegate {
+    func sendMessage(str:String)
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate,WCSessionDelegate {
     
     var window: UIWindow?
 
-    var gameView:ViewController?
+    var gameView:GameAndWatchDelegate?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        gameView = self.window?.rootViewController as? ViewController
+        if self.window?.rootViewController is ViewController{
+            gameView = self.window?.rootViewController as? ViewController
+        } else if self.window?.rootViewController is GameViewController{
+            gameView = self.window?.rootViewController as? GameViewController
+        }
+        
+        
         
         if WCSession.isSupported() {
             let session = WCSession.default()
@@ -41,7 +51,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WCSessionDelegate {
         print("that was the message")
         DispatchQueue.main.async {
             if let vc = self.gameView{
-                vc.updateLabel(str: message["message"] as! String)
+                //vc.updateLabel(str: message["message"] as! String)
+            
+                vc.sendMessage(str: message["message"] as! String)
+                
             }
         }
         
