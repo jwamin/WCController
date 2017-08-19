@@ -8,25 +8,43 @@
 
 import UIKit
 import GameKit
-class GameScene: SKScene {
+class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var entities:[GKEntity] = []
     var graphs:[String:GKGraph] = [:]
     var runInt:Int = 0
     var player:SKShapeNode!
+    var cage:SKShapeNode!
     var isAnimating = false;
     
-    var distanceOffest:CGFloat = 100;
     
+    
+    
+    var distanceOffset:CGFloat = 100;
+    var lineLength:CGFloat = 50;
     override func sceneDidLoad() {
+        
+        let cagePath = CGMutablePath()
+        cagePath.move(to: CGPoint(x: -lineLength, y: -lineLength))
+        cagePath.addLine(to: CGPoint(x: -lineLength, y: lineLength))
+        cagePath.addLine(to: CGPoint(x: lineLength, y: lineLength))
+        cagePath.addLine(to: CGPoint(x: lineLength, y: -lineLength))
+   
+        
         runInt+=1
         print("hello world",runInt)
-        guard let confirmplayer = self.childNode(withName: "player") else {
+        guard let confirmplayer = self.childNode(withName: "player"),let confirmcage = self.childNode(withName: "cage") else {
             fatalError("nothing there")
         }
         
         player = confirmplayer as! SKShapeNode
-        print(player.positionInScene)
+        cage = confirmcage as! SKShapeNode
+        
+        cage.path = cagePath
+        cage.lineWidth = 1.0
+        cage.strokeColor = .white
+        //cage.fillColor = .blue
+        
         
         
         let rotationAction = SKAction.sequence([
@@ -35,7 +53,7 @@ class GameScene: SKScene {
             ])
         
         player.run(rotationAction)
-        
+        cage.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
     }
     
     func performAnimation(_ direction:Directions){
@@ -48,23 +66,23 @@ class GameScene: SKScene {
         
         switch direction {
         case .up:
-            point = CGPoint(x: CGFloat(0.0), y: gameScreen.bounds.maxY - distanceOffest)
+            point = CGPoint(x: CGFloat(0.0), y: gameScreen.bounds.maxY - distanceOffset)
         case .down:
-            point = CGPoint(x: CGFloat(0.0), y: -gameScreen.bounds.maxY + distanceOffest)
+            point = CGPoint(x: CGFloat(0.0), y: -gameScreen.bounds.maxY + distanceOffset)
         case .left:
-            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffest, y: CGFloat(0.0))
+            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffset, y: CGFloat(0.0))
         case .right:
-            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffest, y: CGFloat(0.0))
+            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffset, y: CGFloat(0.0))
         case .center:
             point = CGPoint(x: 0, y: 0)
         case .downleft:
-            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffest, y: -gameScreen.bounds.maxY + distanceOffest)
+            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffset, y: -gameScreen.bounds.maxY + distanceOffset)
         case .downright:
-            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffest, y: -gameScreen.bounds.maxY + distanceOffest)
+            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffset, y: -gameScreen.bounds.maxY + distanceOffset)
         case .upright:
-            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffest, y: gameScreen.bounds.maxY - distanceOffest)
+            point = CGPoint(x: gameScreen.bounds.maxX - distanceOffset, y: gameScreen.bounds.maxY - distanceOffset)
         case .upleft:
-            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffest, y: gameScreen.bounds.maxY - distanceOffest)
+            point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffset, y: gameScreen.bounds.maxY - distanceOffset)
         }
         
         print(point)
@@ -121,6 +139,12 @@ class GameScene: SKScene {
     //    return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
     //    }
     //
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        print("some collision somewhere", contact)
+        
+    }
     
     func controls(_ str:String) -> Void {
         
