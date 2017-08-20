@@ -29,7 +29,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var isAnimating = false;
     var distanceOffset:CGFloat = 100;
     var lineLength:CGFloat = 50;
-    
+    var directionState:Directions = .center
     var label:SKLabelNode?
     
     override func sceneDidLoad() {
@@ -45,116 +45,53 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func createSceneContents() -> Void {
         
         
+        //Create label
         label = SKLabelNode(text: "")
         label?.position = CGPoint(x: 0, y: 0)
-        guard let label = label else {
-            fatalError()
+
+        //guard test existing scene entities from scene designer file
+        guard let confirmplayer = self.childNode(withName: "player"), let cageGroup = self.childNode(withName: "cageParent"), let action = SKAction(named: "action"), let label = label else {
+            fatalError("content missing there")
         }
-        
-        
         
         scene?.addChild(label)
         
-        runInt+=1
-        print("hello world",runInt)
-        
-        
-        
-        guard let confirmplayer = self.childNode(withName: "player"), let cageGroup = self.childNode(withName: "cageParent") else {
-            fatalError("nothing there")
-        }
-        
-        
-        
-        
         self.cageGroup = cageGroup as! SKShapeNode
         
-        
-//        //individual walls
-//        let cageWall = CGSize(width: 5.0, height: cageGroup.frame.height * 2)
-//        let cageTop = CGSize(width: cageGroup.frame.width * 2, height: 5.0)
-//        
-//        let wall1 = SKShapeNode(rectOf: cageWall)
-//        wall1.fillColor = .white
-//        wall1.position = CGPoint(x: -cageGroup.frame.height, y: 0.0)
-//        wall1.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
-//        wall1.physicsBody?.categoryBitMask = collisionBitMask
-//        wall1.physicsBody?.contactTestBitMask = playerBitMask
-//        wall1.physicsBody?.collisionBitMask = playerBitMask
-//        wall1.physicsBody?.affectedByGravity = false;
-//        //wall1.physicsBody?.pinned = true
-//        cageGroup.addChild(wall1)
-//        let wall2 = SKShapeNode(rectOf: cageTop)
-//        wall2.fillColor = .white
-//        wall2.position = CGPoint(x: 0.0, y: -cageGroup.frame.height)
-//        wall2.physicsBody = SKPhysicsBody(rectangleOf: cageTop)
-//        wall2.physicsBody?.categoryBitMask = collisionBitMask
-//        wall2.physicsBody?.contactTestBitMask = playerBitMask
-//        wall2.physicsBody?.collisionBitMask = playerBitMask
-//        wall2.physicsBody?.affectedByGravity = false;
-//        //wall2.physicsBody?.pinned = true
-//        cageGroup.addChild(wall2)
-//                let wall3 = SKShapeNode(rectOf: cageWall)
-//        wall3.fillColor = .white
-//        wall3.position = CGPoint(x: cageGroup.frame.height, y: 0.0)
-//        wall3.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
-//        wall3.physicsBody?.categoryBitMask = collisionBitMask
-//        wall3.physicsBody?.contactTestBitMask = playerBitMask
-//        wall3.physicsBody?.collisionBitMask = playerBitMask
-//        wall3.physicsBody?.affectedByGravity = false;
-//        //wall3.physicsBody?.pinned = true
-//        cageGroup.addChild(wall3)
-        
-        
+        //plot three sided square
         let cagePath = CGMutablePath()
         cagePath.move(to: CGPoint(x: -cageGroup.frame.height, y: -cageGroup.frame.height))
         cagePath.addLine(to: CGPoint(x: -cageGroup.frame.height, y: cageGroup.frame.height))
         cagePath.addLine(to: CGPoint(x: cageGroup.frame.height, y: cageGroup.frame.height))
         cagePath.addLine(to: CGPoint(x: cageGroup.frame.height, y: -cageGroup.frame.height))
-        //cagePath.closeSubpath()
+        //cagePath.closeSubpath() //goes back to start of path, unwanted for this
         
-        let myshape = SKShapeNode(path: cagePath)
-        myshape.lineWidth = 5.0
-        //myshape.fillColor = .white
-        myshape.lineJoin = .round
-        myshape.physicsBody = SKPhysicsBody(edgeChainFrom: cagePath)
-        myshape.physicsBody?.categoryBitMask = collisionBitMask
-        myshape.physicsBody?.contactTestBitMask = playerBitMask
-        myshape.physicsBody?.collisionBitMask = playerBitMask
-        myshape.physicsBody?.affectedByGravity = false;
-        cageGroup.addChild(myshape)
+        //create shape
+        let cage = SKShapeNode(path: cagePath)
+        cage.lineWidth = 5.0
+        cage.lineJoin = .round
         
-        player = confirmplayer as! SKShapeNode
+        //configure physics for cage
+        cage.physicsBody = SKPhysicsBody(edgeChainFrom: cagePath)
+        cage.physicsBody?.categoryBitMask = collisionBitMask
+        cage.physicsBody?.contactTestBitMask = playerBitMask
+        cage.physicsBody?.collisionBitMask = playerBitMask
+        cage.physicsBody?.affectedByGravity = false;
+        cageGroup.addChild(cage)
         
+        
+        //get confirmed player div
+        player = confirmplayer as? SKShapeNode
+        print(player)
+        //setup physics for player square
         player.physicsBody = SKPhysicsBody(rectangleOf: player.frame.size)
         player.physicsBody?.categoryBitMask = playerBitMask
         player.physicsBody?.contactTestBitMask = collisionBitMask
         player.physicsBody?.collisionBitMask = collisionBitMask
         player.physicsBody?.affectedByGravity = false;
-//        player.physicsBody?.isDynamic = false
         
         
-        //cage = confirmcage as! SKShapeNode
-        //player.position = CGPoint(x: CGFloat(0.0), y: gameScreen.bounds.maxY - distanceOffset)
-        //cage.path = cagePath
-        //cage.lineWidth = 1.0
-        //cage.strokeColor = .white
-        //cage.fillColor = .blue
-        
-        
-        //cage.physicsBody = SKPhysicsBody(rectangleOf: cage.frame.size)
-        //cage.physicsBody?.categoryBitMask = collisionBitMask
-        //cage.physicsBody?.pinned = true
-        //cage.physicsBody?.allowsRotation = true
-        //cage.physicsBody?.contactTestBitMask = playerBitMask
-        //cage.physicsBody?.collisionBitMask = playerBitMask
-        //cage.physicsBody?.affectedByGravity = false;
-        //cage.physicsBody?.isDynamic = false;
-        
-        guard let action = SKAction(named: "action") else {
-            fatalError()
-        }
-        
+        //set actions for elements
         
         let rotationAction = SKAction.sequence([
             action,
@@ -166,15 +103,20 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0))
             ])
         
+        //rotates plater
         player.run(rotationAction)
-        //player.removeFromParent()
+        //rotates 'cage'
         cageGroup.run(reverserotationAction)
 
     }
     
+    //didSet method for score incrementer
     func updateLabel(){
         label?.text = "\(successfulPlays) successful plays"
     }
+    
+    
+    //move player with control from AW
     
     func performAnimation(_ direction:Directions){
         
@@ -206,12 +148,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffset, y: gameScreen.bounds.maxY - distanceOffset)
         }
         
-        //print(point)
         //Switch for direction
-        if (!isAnimating){
+        if (!isAnimating && (direction != directionState)){
             isAnimating = true
             let action = SKAction.move(to: point,
                                        duration: 1.0)
+            
 //            action.timingFunction = {
 //                time in
 //                return Float(GameScene.timing(t: Double(time), b: 0, c: 1, d: 1.0))
@@ -220,9 +162,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             action.timingMode = .easeInEaseOut
             
             player.run(action){
+                self.directionState = direction
                 self.isAnimating = false
                 self.successfulPlays += 1
             }
+        } else {
+            print("either is till animating or trying to move to current direction state")
         }
         
        
@@ -230,37 +175,44 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
     }
     
-//    static func timing(t:Double, b:Double, c:Double, d:Double) -> Double{
-//        var s:Double=1.70158;
-//        var p:Double=0;
-//        var a:Double=c;
-//        if (t==0){
-//            return b;
-//        }
-//        if ((t/d)==1){
-//            return b+c;
-//        }
-//        if (p == 0){
-//            p = d * 0.3;
-//        }
-//        if (a < abs(c)) {
-//            a=c;
-//            var s=p/4;
-//        } else {
-//            var s = p/(2 * .pi) * asin(c/a);
-//            return a*pow(2,-10 * t) * sin( (t*d-s)*(2 * .pi)/p ) + c + b;
-//        }
-//        return 0.0
-//    }
+    //experimental over-easing timing function, crudely adapted from javascript, and currently not working
     
-    //    easeOutElastic: function (x, t, b, c, d) {
-    //    var s=1.70158;var p=0;var a=c;
-    //    if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
-    //    if (a < Math.abs(c)) { a=c; var s=p/4; }
-    //    else var s = p/(2*Math.PI) * Math.asin (c/a);
-    //    return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
-    //    }
-    //
+    //original JS Code
+    //        easeOutElastic: function (x, t, b, c, d) {
+    //        var s=1.70158;var p=0;var a=c;
+    //        if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+    //        if (a < Math.abs(c)) { a=c; var s=p/4; }
+    //        else var s = p/(2*Math.PI) * Math.asin (c/a);
+    //        return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
+    //        }
+    
+    
+    //swift conversion
+    static func timing(t:Double, b:Double, c:Double, d:Double) -> Double{
+        var s:Double=1.70158;
+        var p:Double=0;
+        var a:Double=c;
+        if (t==0){
+            return b;
+        }
+        if ((t/d)==1){
+            return b+c;
+        }
+        if (p == 0){
+            p = d * 0.3;
+        }
+        if (a < abs(c)) {
+            a=c;
+            let s=p/4;
+        } else {
+            let s = p/(2 * .pi) * asin(c/a);
+            return a*pow(2,-10 * t) * sin( (t*d-s)*(2 * .pi)/p ) + c + b;
+        }
+        return 0.0
+    }
+    
+
+    //collisions
     
     func didBegin(_ contact: SKPhysicsContact) {
         
@@ -269,13 +221,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.view?.isPaused = true
     }
     
+    //touch events
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if(gameIsOver){
+            
+            //
             NotificationCenter.default.post(name: Notification.Name("gameOver"), object: nil)
         } else {
             print("not game over")
         }
     }
+    
     
     func controls(_ str:String) -> Void {
         
@@ -284,9 +240,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         performAnimation(chosenDirection)
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        
-    }
+    //test deinit
     
     deinit {
         print("self deinitialised")
@@ -294,6 +248,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
 }
 
+//Extension
 
 extension SKNode {
     var positionInScene:CGPoint? {
