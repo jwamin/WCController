@@ -13,6 +13,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     let playerBitMask:UInt32 = 1
     let collisionBitMask:UInt32 = 2
+    var successfulPlays:Int = 0 {
+        didSet{
+            self.updateLabel()
+        }
+    }
+    
+    var gameIsOver = false
     
     var entities:[GKEntity] = []
     var graphs:[String:GKGraph] = [:]
@@ -23,22 +30,76 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var distanceOffset:CGFloat = 100;
     var lineLength:CGFloat = 50;
     
+    var label:SKLabelNode?
+    
     override func sceneDidLoad() {
         
         scene?.physicsWorld.contactDelegate = self
         
-        let cagePath = CGMutablePath()
-        cagePath.move(to: CGPoint(x: -lineLength, y: -lineLength))
-        cagePath.addLine(to: CGPoint(x: -lineLength, y: lineLength))
-        cagePath.addLine(to: CGPoint(x: lineLength, y: lineLength))
-        cagePath.addLine(to: CGPoint(x: lineLength, y: -lineLength))
-   
+//        let cagePath = CGMutablePath()
+//        cagePath.move(to: CGPoint(x: -lineLength, y: -lineLength))
+//        cagePath.addLine(to: CGPoint(x: -lineLength, y: lineLength))
+//        cagePath.addLine(to: CGPoint(x: lineLength, y: lineLength))
+//        cagePath.addLine(to: CGPoint(x: lineLength, y: -lineLength))
+//   
+      
+    createSceneContents()
+    
+    }
+    
+    func createSceneContents() -> Void {
+        let cageWall = CGSize(width: 5.0, height: 400)
+        let cageTop = CGSize(width: 400, height: 5.0)
+        
+        label = SKLabelNode(text: "")
+        label?.position = CGPoint(x: 0, y: 0)
+        guard let label = label else {
+            fatalError()
+        }
+        
+        
+        
+        scene?.addChild(label)
         
         runInt+=1
         print("hello world",runInt)
-        guard let confirmplayer = self.childNode(withName: "player"),let confirmcage = self.childNode(withName: "cage") else {
+        
+        
+        
+        guard let confirmplayer = self.childNode(withName: "player"), let cageGroup = self.childNode(withName: "cageParent") else {
             fatalError("nothing there")
         }
+        
+        let wall1 = SKShapeNode(rectOf: cageWall)
+        wall1.fillColor = .white
+        wall1.position = CGPoint(x: -200, y: 0.0)
+        wall1.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
+        wall1.physicsBody?.categoryBitMask = collisionBitMask
+        wall1.physicsBody?.contactTestBitMask = playerBitMask
+        wall1.physicsBody?.collisionBitMask = playerBitMask
+        wall1.physicsBody?.affectedByGravity = false;
+        //wall1.physicsBody?.pinned = true
+        cageGroup.addChild(wall1)
+        let wall2 = SKShapeNode(rectOf: cageTop)
+        wall2.fillColor = .white
+        wall2.position = CGPoint(x: 0.0, y: 200)
+        wall2.physicsBody = SKPhysicsBody(rectangleOf: cageTop)
+        wall2.physicsBody?.categoryBitMask = collisionBitMask
+        wall2.physicsBody?.contactTestBitMask = playerBitMask
+        wall2.physicsBody?.collisionBitMask = playerBitMask
+        wall2.physicsBody?.affectedByGravity = false;
+        //wall2.physicsBody?.pinned = true
+        cageGroup.addChild(wall2)
+        let wall3 = SKShapeNode(rectOf: cageWall)
+        wall3.fillColor = .white
+        wall3.position = CGPoint(x: 200, y: 0.0)
+        wall3.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
+        wall3.physicsBody?.categoryBitMask = collisionBitMask
+        wall3.physicsBody?.contactTestBitMask = playerBitMask
+        wall3.physicsBody?.collisionBitMask = playerBitMask
+        wall3.physicsBody?.affectedByGravity = false;
+        //wall3.physicsBody?.pinned = true
+        cageGroup.addChild(wall3)
         
         
         player = confirmplayer as! SKShapeNode
@@ -51,21 +112,21 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         player.physicsBody?.isDynamic = false
         
         
-        cage = confirmcage as! SKShapeNode
+        //cage = confirmcage as! SKShapeNode
         //player.position = CGPoint(x: CGFloat(0.0), y: gameScreen.bounds.maxY - distanceOffset)
-        cage.path = cagePath
-        cage.lineWidth = 1.0
-        cage.strokeColor = .white
+        //cage.path = cagePath
+        //cage.lineWidth = 1.0
+        //cage.strokeColor = .white
         //cage.fillColor = .blue
         
         
-        cage.physicsBody = SKPhysicsBody(rectangleOf: cage.frame.size)
-        cage.physicsBody?.categoryBitMask = collisionBitMask
-        cage.physicsBody?.pinned = true
-        cage.physicsBody?.allowsRotation = true
-        cage.physicsBody?.contactTestBitMask = playerBitMask
-        cage.physicsBody?.collisionBitMask = playerBitMask
-        cage.physicsBody?.affectedByGravity = false;
+        //cage.physicsBody = SKPhysicsBody(rectangleOf: cage.frame.size)
+        //cage.physicsBody?.categoryBitMask = collisionBitMask
+        //cage.physicsBody?.pinned = true
+        //cage.physicsBody?.allowsRotation = true
+        //cage.physicsBody?.contactTestBitMask = playerBitMask
+        //cage.physicsBody?.collisionBitMask = playerBitMask
+        //cage.physicsBody?.affectedByGravity = false;
         //cage.physicsBody?.isDynamic = false;
         
         let rotationAction = SKAction.sequence([
@@ -74,7 +135,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             ])
         
         player.run(rotationAction)
-        //cage.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
+        cageGroup.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
+
+    }
+    
+    func updateLabel(){
+        label?.text = "\(successfulPlays) successful plays"
     }
     
     func performAnimation(_ direction:Directions){
@@ -121,6 +187,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             
             player.run(action){
                 self.isAnimating = false
+                self.successfulPlays += 1
             }
         }
         
@@ -164,10 +231,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         
         print("some collision somewhere", contact)
-        
+        gameIsOver = true
+        self.view?.isPaused = true
     }
     
-    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if(gameIsOver){
+            NotificationCenter.default.post(name: Notification.Name("gameOver"), object: nil)
+        } else {
+            print("not game over")
+        }
+    }
     
     func controls(_ str:String) -> Void {
         
@@ -178,6 +252,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         
+    }
+    
+    deinit {
+        print("self deinitialised")
     }
     
 }

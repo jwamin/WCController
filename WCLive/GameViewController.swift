@@ -28,6 +28,15 @@ class GameViewController: UIViewController,GameAndWatchDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(startScene), name: Notification.Name("gameOver"), object: nil)
+        
+        startScene()
+                // Do any additional setup after loading the view.
+    }
+    
+    
+    func startScene(){
+        
         guard let scene = GKScene(fileNamed: "GameScene") else {
             fatalError("no scene")
         }
@@ -47,7 +56,7 @@ class GameViewController: UIViewController,GameAndWatchDelegate {
         
         skView.showsNodeCount = true;
         skView.showsPhysics = true
-        // Do any additional setup after loading the view.
+
     }
     
     func sendMessage(str: String) {
