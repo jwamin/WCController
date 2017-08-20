@@ -46,15 +46,14 @@ class GameViewController: UIViewController,GameAndWatchDelegate {
         sceneNode.entities = scene.entities
         sceneNode.graphs = scene.graphs
         
-        sceneNode.scaleMode = .aspectFill
+        sceneNode.scaleMode = .fill
         
         let skView = self.view as! SKView
         
         skView.presentScene(sceneNode)
         
-        skView.showsFPS = true;
-        
-        skView.showsNodeCount = true;
+        //skView.showsFPS = true;
+        //skView.showsNodeCount = true;
         skView.showsPhysics = true
 
     }

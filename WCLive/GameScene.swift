@@ -25,7 +25,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var graphs:[String:GKGraph] = [:]
     var runInt:Int = 0
     var player:SKShapeNode!
-    var cage:SKShapeNode!
+    var cageGroup:SKShapeNode!
     var isAnimating = false;
     var distanceOffset:CGFloat = 100;
     var lineLength:CGFloat = 50;
@@ -36,20 +36,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         scene?.physicsWorld.contactDelegate = self
         
-//        let cagePath = CGMutablePath()
-//        cagePath.move(to: CGPoint(x: -lineLength, y: -lineLength))
-//        cagePath.addLine(to: CGPoint(x: -lineLength, y: lineLength))
-//        cagePath.addLine(to: CGPoint(x: lineLength, y: lineLength))
-//        cagePath.addLine(to: CGPoint(x: lineLength, y: -lineLength))
-//   
+
       
     createSceneContents()
     
     }
     
     func createSceneContents() -> Void {
-        let cageWall = CGSize(width: 5.0, height: 400)
-        let cageTop = CGSize(width: 400, height: 5.0)
+        
         
         label = SKLabelNode(text: "")
         label?.position = CGPoint(x: 0, y: 0)
@@ -70,37 +64,65 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             fatalError("nothing there")
         }
         
-        let wall1 = SKShapeNode(rectOf: cageWall)
-        wall1.fillColor = .white
-        wall1.position = CGPoint(x: -200, y: 0.0)
-        wall1.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
-        wall1.physicsBody?.categoryBitMask = collisionBitMask
-        wall1.physicsBody?.contactTestBitMask = playerBitMask
-        wall1.physicsBody?.collisionBitMask = playerBitMask
-        wall1.physicsBody?.affectedByGravity = false;
-        //wall1.physicsBody?.pinned = true
-        cageGroup.addChild(wall1)
-        let wall2 = SKShapeNode(rectOf: cageTop)
-        wall2.fillColor = .white
-        wall2.position = CGPoint(x: 0.0, y: 200)
-        wall2.physicsBody = SKPhysicsBody(rectangleOf: cageTop)
-        wall2.physicsBody?.categoryBitMask = collisionBitMask
-        wall2.physicsBody?.contactTestBitMask = playerBitMask
-        wall2.physicsBody?.collisionBitMask = playerBitMask
-        wall2.physicsBody?.affectedByGravity = false;
-        //wall2.physicsBody?.pinned = true
-        cageGroup.addChild(wall2)
-        let wall3 = SKShapeNode(rectOf: cageWall)
-        wall3.fillColor = .white
-        wall3.position = CGPoint(x: 200, y: 0.0)
-        wall3.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
-        wall3.physicsBody?.categoryBitMask = collisionBitMask
-        wall3.physicsBody?.contactTestBitMask = playerBitMask
-        wall3.physicsBody?.collisionBitMask = playerBitMask
-        wall3.physicsBody?.affectedByGravity = false;
-        //wall3.physicsBody?.pinned = true
-        cageGroup.addChild(wall3)
         
+        
+        
+        self.cageGroup = cageGroup as! SKShapeNode
+        
+        
+//        //individual walls
+//        let cageWall = CGSize(width: 5.0, height: cageGroup.frame.height * 2)
+//        let cageTop = CGSize(width: cageGroup.frame.width * 2, height: 5.0)
+//        
+//        let wall1 = SKShapeNode(rectOf: cageWall)
+//        wall1.fillColor = .white
+//        wall1.position = CGPoint(x: -cageGroup.frame.height, y: 0.0)
+//        wall1.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
+//        wall1.physicsBody?.categoryBitMask = collisionBitMask
+//        wall1.physicsBody?.contactTestBitMask = playerBitMask
+//        wall1.physicsBody?.collisionBitMask = playerBitMask
+//        wall1.physicsBody?.affectedByGravity = false;
+//        //wall1.physicsBody?.pinned = true
+//        cageGroup.addChild(wall1)
+//        let wall2 = SKShapeNode(rectOf: cageTop)
+//        wall2.fillColor = .white
+//        wall2.position = CGPoint(x: 0.0, y: -cageGroup.frame.height)
+//        wall2.physicsBody = SKPhysicsBody(rectangleOf: cageTop)
+//        wall2.physicsBody?.categoryBitMask = collisionBitMask
+//        wall2.physicsBody?.contactTestBitMask = playerBitMask
+//        wall2.physicsBody?.collisionBitMask = playerBitMask
+//        wall2.physicsBody?.affectedByGravity = false;
+//        //wall2.physicsBody?.pinned = true
+//        cageGroup.addChild(wall2)
+//                let wall3 = SKShapeNode(rectOf: cageWall)
+//        wall3.fillColor = .white
+//        wall3.position = CGPoint(x: cageGroup.frame.height, y: 0.0)
+//        wall3.physicsBody = SKPhysicsBody(rectangleOf: cageWall)
+//        wall3.physicsBody?.categoryBitMask = collisionBitMask
+//        wall3.physicsBody?.contactTestBitMask = playerBitMask
+//        wall3.physicsBody?.collisionBitMask = playerBitMask
+//        wall3.physicsBody?.affectedByGravity = false;
+//        //wall3.physicsBody?.pinned = true
+//        cageGroup.addChild(wall3)
+        
+        
+        let cagePath = CGMutablePath()
+        cagePath.move(to: CGPoint(x: -cageGroup.frame.height, y: -cageGroup.frame.height))
+        cagePath.addLine(to: CGPoint(x: -cageGroup.frame.height, y: cageGroup.frame.height))
+        cagePath.addLine(to: CGPoint(x: cageGroup.frame.height, y: cageGroup.frame.height))
+        cagePath.addLine(to: CGPoint(x: cageGroup.frame.height, y: -cageGroup.frame.height))
+        //cagePath.closeSubpath()
+        
+        let myshape = SKShapeNode(path: cagePath)
+        myshape.lineWidth = 5.0
+        //myshape.fillColor = .white
+        myshape.lineJoin = .round
+        myshape.physicsBody = SKPhysicsBody(edgeChainFrom: cagePath)
+        myshape.physicsBody?.categoryBitMask = collisionBitMask
+        myshape.physicsBody?.contactTestBitMask = playerBitMask
+        myshape.physicsBody?.collisionBitMask = playerBitMask
+        myshape.physicsBody?.affectedByGravity = false;
+        cageGroup.addChild(myshape)
         
         player = confirmplayer as! SKShapeNode
         
@@ -109,7 +131,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         player.physicsBody?.contactTestBitMask = collisionBitMask
         player.physicsBody?.collisionBitMask = collisionBitMask
         player.physicsBody?.affectedByGravity = false;
-        player.physicsBody?.isDynamic = false
+//        player.physicsBody?.isDynamic = false
         
         
         //cage = confirmcage as! SKShapeNode
@@ -129,13 +151,24 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         //cage.physicsBody?.affectedByGravity = false;
         //cage.physicsBody?.isDynamic = false;
         
+        guard let action = SKAction(named: "action") else {
+            fatalError()
+        }
+        
+        
         let rotationAction = SKAction.sequence([
-            SKAction(named: "action")!,
+            action,
             SKAction.repeatForever(SKAction.rotate(byAngle: .pi/4, duration: 1.0))
             ])
         
+        let reverserotationAction = SKAction.sequence([
+            action,
+            SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0))
+            ])
+        
         player.run(rotationAction)
-        cageGroup.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
+        //player.removeFromParent()
+        cageGroup.run(reverserotationAction)
 
     }
     
@@ -146,7 +179,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func performAnimation(_ direction:Directions){
         
         var point:CGPoint = player.position
-        
+        print(cageGroup.frame)
+        print(player.frame)
         guard let gameScreen = self.view else {
             fatalError()
         }
