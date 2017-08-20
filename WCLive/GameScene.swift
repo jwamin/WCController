@@ -10,19 +10,22 @@ import UIKit
 import GameKit
 class GameScene: SKScene,SKPhysicsContactDelegate {
     
+    
+    let playerBitMask:UInt32 = 1
+    let collisionBitMask:UInt32 = 2
+    
     var entities:[GKEntity] = []
     var graphs:[String:GKGraph] = [:]
     var runInt:Int = 0
     var player:SKShapeNode!
     var cage:SKShapeNode!
     var isAnimating = false;
-    
-    
-    
-    
     var distanceOffset:CGFloat = 100;
     var lineLength:CGFloat = 50;
+    
     override func sceneDidLoad() {
+        
+        scene?.physicsWorld.contactDelegate = self
         
         let cagePath = CGMutablePath()
         cagePath.move(to: CGPoint(x: -lineLength, y: -lineLength))
@@ -37,15 +40,33 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             fatalError("nothing there")
         }
         
-        player = confirmplayer as! SKShapeNode
-        cage = confirmcage as! SKShapeNode
         
+        player = confirmplayer as! SKShapeNode
+        
+        player.physicsBody = SKPhysicsBody(rectangleOf: player.frame.size)
+        player.physicsBody?.categoryBitMask = playerBitMask
+        player.physicsBody?.contactTestBitMask = collisionBitMask
+        player.physicsBody?.collisionBitMask = collisionBitMask
+        player.physicsBody?.affectedByGravity = false;
+        player.physicsBody?.isDynamic = false
+        
+        
+        cage = confirmcage as! SKShapeNode
+        //player.position = CGPoint(x: CGFloat(0.0), y: gameScreen.bounds.maxY - distanceOffset)
         cage.path = cagePath
         cage.lineWidth = 1.0
         cage.strokeColor = .white
         //cage.fillColor = .blue
         
         
+        cage.physicsBody = SKPhysicsBody(rectangleOf: cage.frame.size)
+        cage.physicsBody?.categoryBitMask = collisionBitMask
+        cage.physicsBody?.pinned = true
+        cage.physicsBody?.allowsRotation = true
+        cage.physicsBody?.contactTestBitMask = playerBitMask
+        cage.physicsBody?.collisionBitMask = playerBitMask
+        cage.physicsBody?.affectedByGravity = false;
+        //cage.physicsBody?.isDynamic = false;
         
         let rotationAction = SKAction.sequence([
             SKAction(named: "action")!,
@@ -53,7 +74,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             ])
         
         player.run(rotationAction)
-        cage.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
+        //cage.run(SKAction.repeatForever(SKAction.rotate(byAngle: -.pi/2, duration: 1.0)))
     }
     
     func performAnimation(_ direction:Directions){
@@ -85,7 +106,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             point = CGPoint(x: -gameScreen.bounds.maxX + distanceOffset, y: gameScreen.bounds.maxY - distanceOffset)
         }
         
-        print(point)
+        //print(point)
         //Switch for direction
         if (!isAnimating){
             isAnimating = true
@@ -145,6 +166,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         print("some collision somewhere", contact)
         
     }
+    
+    
     
     func controls(_ str:String) -> Void {
         

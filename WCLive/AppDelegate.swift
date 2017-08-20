@@ -47,8 +47,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WCSessionDelegate {
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
-        print(message)
-        print("that was the message")
+        //print(message)
+        //print("that was the message")
         DispatchQueue.main.async {
             if let vc = self.gameView{
                 //vc.updateLabel(str: message["message"] as! String)

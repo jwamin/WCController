@@ -46,7 +46,7 @@ class GameViewController: UIViewController,GameAndWatchDelegate {
         skView.showsFPS = true;
         
         skView.showsNodeCount = true;
-        
+        skView.showsPhysics = true
         // Do any additional setup after loading the view.
     }
     
